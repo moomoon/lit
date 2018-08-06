@@ -1,0 +1,147 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Lit</title>
+  <script src="./bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="./elements/codelab.html">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <style is="custom-style">
+    body {
+      font-family: "Roboto",sans-serif;
+      background: var(--google-codelab-background, #F8F9FA);
+    }
+  </style>
+  
+</head>
+<body unresolved class="fullbleed">
+
+  <google-codelab title="Lit"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="概览" duration="0">
+        <p>Lit 是流利说专属的代码版本管理客户端。集成了流利说工作流和很多方便的功能，让工程师能更简单地相互合作，构建出易于理解的工作记录。<br>这份教程将展示 lit 的一些基本操作，所需时间见右上角。</p>
+<aside class="special"><p>Lit 的所有命令都可以通过 <code>lit --help</code> 找到。如果你觉得帮助信息太啰嗦，试试 <code>lit summary</code></p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="安装" duration="3">
+        <p>Lit 发布在流利说内部的 Homebrew tap 上，安装步骤如下:</p>
+<ul>
+<li>安装 <a href="https://brew.sh/" target="_blank">Homebrew</a></li>
+</ul>
+<pre><code>/usr/bin/ruby -e &#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&#34;
+</code></pre>
+<ul>
+<li>添加 Tap 并安装 Lit</li>
+</ul>
+<pre><code>brew tap lls/lit git@git.llsapp.com:client-infra/homebrew-lit.git &amp;&amp; brew install lls/lit/lit
+</code></pre>
+<ul>
+<li>检查一番</li>
+</ul>
+<pre><code>lit --version
+</code></pre>
+<p>如果你的终端输出了类似如下的信息：<br><img alt="lit_ver" src="img/c325ca7c812231fa.png"><br>这表示 Lit 已经安装完成。</p>
+<aside class="warning"><p>如果你的终端输出了这样的信息<br><img alt="lit_dependson_java" src="img/d25857582953776b.png"><br>请根据屏幕提示安装 JRE 8 或以上</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="生成 Commit" duration="3">
+        <p>规范的 Commit 信息有助于对代码的静态分析。这里我们引用了 <a href="https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines" target="_blank">Angular commit message guidelines</a>, 要求每个 commit 信息由类型、影响范围和具体信息组成。</p>
+<p>一条合规的 commit 信息看起来像这样：<br><code>fix(logger): normalize log file paths</code><br>这里的类型是<code>fix</code>，影响范围是<code>logger</code>，具体信息是<code>normalize log file paths</code>。<br>影响范围和具体信息没有固定值，可以是你觉得合适的任何字符串，但 commit 类型必须是这几项预设值之一：<br><code>feat</code>, <code>fix</code>, <code>test</code>, <code>perf</code>, <code>refactor</code>, <code>docs</code>, <code>ci</code>, <code>build</code>, <code>style</code>, <code>chore</code></p>
+<aside class="special"><p>如果你记不起 commit 类型有哪些，或者对某个类型的范围有疑惑，试试 <code>lit commit -t</code></p>
+</aside>
+<p>要创建一条新的 commit，在终端中输入</p>
+<pre><code>lit commit &#34;fix: normalize log file paths&#34;
+</code></pre>
+<p>Lit 会知道你没有提供影响范围，并提示你补全信息：<br><img alt="lit scope" src="img/dae1976131346fc7.png"><br>在补全影响范围并确认后，Lit 会输出成功创建 commit 的消息<br><img alt="lit commit" src="img/416b1650694ac52a.png"></p>
+<p>除了最基本的 commit 信息之外，Lit commit 还提供了与 git-commit 类似的 –amend 和 -a 等选项。</p>
+<aside class="special"><p>对于任意的 Lit 子命令 xyz，你都可以通过<code>lit xyz --help</code>来查看该子命令所有支持的选项。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="提交 Merge Request" duration="5">
+        <p>流利说采用 Gitlab 来管理代码。通常我们需要往某个分支合入代码时，都需要先将本地分支推到远端，然后打开浏览器，找到对应项目，最后手动提交一个 Merge Request。</p>
+<p>Lit 的 mr 命令可以被用来简化这一流程。</p>
+<aside class="special"><p>为了与 Gitlab 进行通讯，Lit 需要知道你的 Personal Access Token。<br>你可以从<a href="https://git.llsapp.com/profile/personal_access_tokens" target="_blank">这里</a>获取到token，然后使用<code>lit pat ${personal_access_token_here}</code>告知 Lit</p>
+</aside>
+<p>要生成一条 MR，我们需要</p>
+<h3>项目名</h3>
+<p>通过 <code>-j</code> 或 <code>--project</code> 指定，如果没有提供，Lit 会根据当前 Git 目录的 remote config 来猜测可能的值</p>
+<h3>源分支名</h3>
+<p>通过 <code>-z</code> 或 <code>--source-branch</code> 指定，如果没有提供，Lit 会根据当前分支的 remote tracking branch 来猜测可能的值</p>
+<h3>目标分支名</h3>
+<p>通过 <code>-b</code> 或 <code>--target-branch</code> 指定。<br>如果没有提供，在 Android 工程下，Lit 会读取 gradle.properties 的 <code>APP_VERSION_NAME_SUFFIX_TYPE</code>。<br>当其值为<code>0</code>时，目标分支为<code>develop</code>，为<code>1</code>或<code>2</code>时，目标分支为<code>release</code></p>
+<h3>描述</h3>
+<p>通过 <code>-d</code> 或 <code>--description</code> 指定，默认值为当前分支与目标分支之间的变更记录</p>
+<h3>标题</h3>
+<p>通过 <code>-t</code> 或 <code>--title</code> 指定，当当前分支与目标分支之间的变更记录只有一条时，默认值为该变更记录</p>
+<aside class="special"><p>Lit mr 还支持通过 <code>-l</code> 来指定 label，通过<code>-g</code> 来指定 approver group，当这两个选项配合 <code>-s</code> 一起使用时，Lit 会将 label 与 group 记录下来，作为你个人当前项目的默认值</p>
+</aside>
+<p>当你的本地分支落后于远端分支时，可以使用 <code>-rp</code> 来 rebase 并推送到远端分支，或者使用 <code>-fp</code> 来强制覆盖远端分支。</p>
+<p>一次最典型的 MR 提交大概会像这样：</p>
+<pre><code>lit mr -rpt &#34;awesome mr&#34;
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="生成 Tag" duration="1">
+        <p>流利说的持续集成系统利用 Tag 来触发打包流程，所以我们对 Tag 内容进行了约束，必须是类似vx.y.z-something的格式。</p>
+<p>当你试图用<code>lit tag</code>来创建一条不合规范的 Tag 时，lit 会检查并提示你补全缺失的部分:</p>
+<p><img alt="lit tag" src="img/5fbc2ef939fc0962.png"><br>在这里，用户没有输入 Tag 的最后一位，Lit 会提示补全对应信息（红色下划线）</p>
+<p><img alt="lit tag complete" src="img/6693c7e6d3f935b5.png"><br>补全信息并确认之后，Lit 才会创建对应的 Tag</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="切换分支" duration="1">
+        <p>流利说</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-49880327-14', 'auto');
+
+    (function() {
+      var gaCodelab = '';
+      if (gaCodelab) {
+        ga('create', gaCodelab, 'auto', {name: 'codelab'});
+      }
+
+      var gaView;
+      var parts = location.search.substring(1).split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var param = parts[i].split('=');
+        if (param[0] === 'viewga') {
+          gaView = param[1];
+          break;
+        }
+      }
+      if (gaView && gaView !== gaCodelab) {
+        ga('create', gaView, 'auto', {name: 'view'});
+      }
+    })();
+  </script>
+
+</body>
+</html>
