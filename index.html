@@ -25,7 +25,7 @@
                   feedback-link="">
     
       <google-codelab-step label="概览" duration="0">
-        <p>Lit 是流利说专属的代码版本管理客户端。集成了流利说工作流和很多方便的功能，让工程师能更简单地相互合作，构建出易于理解的工作记录。<br>这份教程将展示 lit 的一些基本操作，所需时间见右上角。</p>
+        <p>Lit 是流利说专属的代码版本管理客户端。集成了流利说工作流和很多方便的功能，让工程师能更简单地相互合作，构建出易于理解的工作记录。<br>这份教程将展示 lit 的一些基本操作，用时约16分钟。</p>
 <aside class="special"><p>Lit 的所有命令都可以通过 <code>lit --help</code> 找到。如果你觉得帮助信息太啰嗦，试试 <code>lit summary</code></p>
 </aside>
 
@@ -94,11 +94,25 @@
 <p>一次最典型的 MR 提交大概会像这样：</p>
 <pre><code>lit mr -rpt &#34;awesome mr&#34;
 </code></pre>
+<aside class="special"><p>现在试试<code>lit mr --help</code>吧。</p>
+</aside>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="生成 Tag" duration="1">
+      <google-codelab-step label="修复 Commit 信息" duration="2">
+        <p>虽然 Lit 提供了格式化 Commit 信息的功能，但这并非强制的要求，你总是可以使用 Git 来创建任何自己认为合适的提交。然而一旦不遵循规范，流利说的很多其他工具（比如变更集分类和覆盖率分析）将无法正确理解这些提交。<br>为此 Lit 提供了 revise 命令，让工程师在提交 MR 之前有一次检查并修复所有不合规范的 commit。</p>
+<pre><code>lit revise develop
+</code></pre>
+<p>在上面这个例子中，修复的目标分支是 develop，lit 会先计算出当前分支和目标分支之间的 merge base，然后梳理所有当前分支与该 merge base 之间的提交，找出不合规范的部分，并提示用户修改。</p>
+<p><img alt="lit revise" src="img/619ae2e8252d188c.png"></p>
+<aside class="special"><p><code>lit revise</code> 实际上辅助你做了一次 <code>rebase</code>，修复的结果会存储在一条全新分支上，不会影响现有的提交。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="生成 Tag" duration="2">
         <p>流利说的持续集成系统利用 Tag 来触发打包流程，所以我们对 Tag 内容进行了约束，必须是类似vx.y.z-something的格式。</p>
 <p>当你试图用<code>lit tag</code>来创建一条不合规范的 Tag 时，lit 会检查并提示你补全缺失的部分:</p>
 <p><img alt="lit tag" src="img/5fbc2ef939fc0962.png"><br>在这里，用户没有输入 Tag 的最后一位，Lit 会提示补全对应信息（红色下划线）</p>
@@ -108,7 +122,11 @@
       </google-codelab-step>
     
       <google-codelab-step label="切换分支" duration="1">
-        <p>流利说</p>
+        <p>在<code>LingoChamp Production Flow</code>中，我们定义了三种工作分支<code>feat/xxx</code>, <code>fix/yyy</code>, 和<code>hotfix/zzz</code>。<br>Lit 提供了三个对应的命令来帮助大家创建相应分支：</p>
+<pre><code>lit feature xxx
+lit fix yyy
+lit hotfix zzz
+</code></pre>
 
 
       </google-codelab-step>
