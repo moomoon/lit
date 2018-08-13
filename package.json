@@ -1,0 +1,14 @@
+{
+  "name": "lit-document",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:moomoon/lit.git",
+  "author": "jing.jia <jing.jia@liulishuo.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "gulp default"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1"
+  }
+}
