@@ -25,7 +25,7 @@
                   feedback-link="">
     
       <google-codelab-step label="概览" duration="0">
-        <p>Lit 是流利说专属的代码版本管理客户端。集成了流利说工作流和很多方便的功能，让工程师能更简单地相互合作，构建出易于理解的工作记录。<br>这份教程将展示 lit 的一些基本操作，用时约16分钟。</p>
+        <p>Lit 是流利说专属的代码版本管理客户端。集成了流利说工作流和很多方便的功能，让工程师能更简单地相互合作，构建出易于理解的工作记录。<br>这份教程将展示 lit 的一些基本操作，用时约20分钟。</p>
 <aside class="special"><p>Lit 的所有命令都可以通过 <code>lit --help</code> 找到。如果你觉得帮助信息太啰嗦，试试 <code>lit summary</code></p>
 </aside>
 
@@ -127,6 +127,35 @@
 lit fix yyy
 lit hotfix zzz
 </code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="变更集" duration="1">
+        <p>很多时候我们会使用变更集来查看一个分支包含的内容。Lit 提供了 <code>changelog</code> 来简化这项工作:</p>
+<pre><code>lit changelog -f html develop &gt; path/to/your/output/file
+</code></pre>
+<p>这里的 <code>-f</code> 表示输出的格式，目前 Lit 支持的格式有 <code>html</code>, <code>slack</code>, <code>human</code>, <code>default</code> 这四种；<code>develop</code> 表示输出变更集的起始点。</p>
+<aside class="special"><p>实际上，变更集的起始点是当前 <code>HEAD</code> 与 <code>develop</code> 的 merge base。所以如果当前分支已经合进了 <code>develop</code>, lit 将无法计算出变更集。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="发布" duration="3">
+        <p>流利说 Android 项目发布包含很多手动步骤。Lit 提供了 <code>deploy</code> 来固化这些步骤。</p>
+<pre><code>lit deploy vx.y.z-alpha1
+</code></pre>
+<p>在这条命令背后，lit 执行的操作是这样的：</p>
+<ol type="1">
+<li>检查 tag 是否符合类似 v1.2.3-alpha1 的格式</li>
+<li>根据 remote 查找 project，并验证当前用户是否拥有 master 以上权限</li>
+<li>本地 release 分支 rebase 到远端 release 分支</li>
+<li>当前分支 rebase 到本地 release 分支</li>
+<li>gradle.properties 中 APP_VERSION_CODE 加一</li>
+<li>生成 commit</li>
+<li>push 本地 release 到远端</li>
+</ol>
 
 
       </google-codelab-step>
