@@ -144,17 +144,18 @@ lit hotfix zzz
     
       <google-codelab-step label="发布" duration="3">
         <p>流利说 Android 项目发布包含很多手动步骤。Lit 提供了 <code>deploy</code> 来固化这些步骤。</p>
-<pre><code>lit deploy vx.y.z-alpha1
+<pre><code>lit deploy -n vx\&#39;.y\&#39;.z\&#39; vx.y.z-alhpa0 (mr ...)
 </code></pre>
 <p>在这条命令背后，lit 执行的操作是这样的：</p>
 <ol type="1">
-<li>检查 tag 是否符合类似 v1.2.3-alpha1 的格式</li>
+<li>检查 tag 是否符合类似 v1.2.3(-alpha0) 的格式</li>
 <li>根据 remote 查找 project，并验证当前用户是否拥有 master 以上权限</li>
-<li>本地 release 分支 rebase 到远端 release 分支</li>
-<li>当前分支 rebase 到本地 release 分支</li>
-<li>gradle.properties 中 APP_VERSION_CODE 加一</li>
-<li>生成 commit</li>
-<li>push 本地 release 到远端</li>
+<li>本地 gradle.properties 中 APP_VERSION_NAME 改为 vx.y.z-alpha0 对应的值，并把 APP_VERSION_CODE 加 10</li>
+<li>生成一个 commit 及 一个 vx.y.z-alhpa0 的 tag</li>
+<li>本地当前分支推到远端 release</li>
+<li>本地 gradle.properties 中 APP_VERSION_NAME 改为 vx&#39;.y&#39;.z&#39; 对应的值，并把 APP_VERSION_CODE 加 10</li>
+<li>生成一个 commit</li>
+<li>如跟随有 mr 命令，则执行对应的 mr 操作</li>
 </ol>
 
 
